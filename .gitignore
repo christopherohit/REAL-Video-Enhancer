@@ -4,3 +4,9 @@ github/
 __pycache__/
 *.py[cod]
 *$py.class
+
+
+*.pkl
+*.pth
+*.mp4
+ffmpeg
