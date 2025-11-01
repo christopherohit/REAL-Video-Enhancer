@@ -5,8 +5,33 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
+# Large model files
 *.pkl
 *.pth
+*.onnx
+*.engine
+*.plan
+
+# Video files
 *.mp4
+*.avi
+*.mkv
+*.mov
+*.wmv
+
+# Binary executables
+bin/
 ffmpeg
+ffmpeg.exe
+
+# Log files
+*_log.txt
+backend_log.txt
+ffmpeg_log.txt
+
+# Temporary/command files
+command.sh
+*.tmp
+
+# Generated output
+output.mp4
