@@ -105,15 +105,14 @@ class TorchUtils:
         return self.__run_stream_func(stream) 
 
     def sync_stream(self, stream: torch.Stream):
-        match self.device_type:
-            case "cuda" | "xpu":
-                stream.synchronize()
-            case "mps":
-                torch.mps.synchronize()
-            case "cpu":
-                pass  # CPU does not require explicit synchronization
-            case _:
-                log(f"Unknown device type {self.device_type}, skipping stream synchronization.")
+        if self.device_type in ["cuda", "xpu"]:
+            stream.synchronize()
+        elif self.device_type == "mps":
+            torch.mps.synchronize()
+        elif self.device_type == "cpu":
+            pass  # CPU does not require explicit synchronization
+        else:
+            log(f"Unknown device type {self.device_type}, skipping stream synchronization.")
                 # For other devices, we assume no synchronization is needed.
         
     def sync_all_streams(self):

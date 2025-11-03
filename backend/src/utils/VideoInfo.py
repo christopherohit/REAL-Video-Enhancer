@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import List
 import subprocess
@@ -168,22 +170,21 @@ class FFMpegInfoWrapper(VideoInfo):
             else:
                 string_pattern = "),"
             try:
-                match color_opt:
-                    case "Space":
-                        color_opt_detected = self.stream_line_2.split(",")[1].split("(")[1].strip()
+                if color_opt == "Space":
+                    color_opt_detected = self.stream_line_2.split(",")[1].split("(")[1].strip()
+                    if color_opt_detected not in FFMPEG_COLORSPACES:
+                        color_opt_detected = self.stream_line.split(string_pattern)[1].split(",")[1].split("/")[0].strip()
                         if color_opt_detected not in FFMPEG_COLORSPACES:
-                            color_opt_detected = self.stream_line.split(string_pattern)[1].split(",")[1].split("/")[0].strip()
-                            if color_opt_detected not in FFMPEG_COLORSPACES:
-                                return None
+                            return None
 
-                    case "Primaries":
-                        color_opt_detected = self.stream_line.split(string_pattern)[1].split("/")[1].strip()
-                        if color_opt_detected not in FFMPEG_COLOR_PRIMARIES:
-                            return None
-                    case "Transfer":
-                        color_opt_detected = self.stream_line.split(string_pattern)[1].split("/")[2].replace(")","").split(",")[0].strip()
-                        if color_opt_detected not in FFMPEG_COLOR_TRC:
-                            return None
+                elif color_opt == "Primaries":
+                    color_opt_detected = self.stream_line.split(string_pattern)[1].split("/")[1].strip()
+                    if color_opt_detected not in FFMPEG_COLOR_PRIMARIES:
+                        return None
+                elif color_opt == "Transfer":
+                    color_opt_detected = self.stream_line.split(string_pattern)[1].split("/")[2].replace(")","").split(",")[0].strip()
+                    if color_opt_detected not in FFMPEG_COLOR_TRC:
+                        return None
 
                 if "progressive" in color_opt_detected.lower():
                     return None

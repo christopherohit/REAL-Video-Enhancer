@@ -164,15 +164,14 @@ class EncoderSettings:
         self.encoder: Encoder = self.getEncoder()
 
     def getEncoder(self) -> Encoder:
-        match self.type:
-            case "video":
-                encoder_type = VideoEncoder
-            case "audio":
-                encoder_type = AudioEncoder
-            case "subtitle":
-                encoder_type = SubtitleEncoder
-            case _:
-                raise ValueError("Not a valid encoder type")
+        if self.type == "video":
+            encoder_type = VideoEncoder
+        elif self.type == "audio":
+            encoder_type = AudioEncoder
+        elif self.type == "subtitle":
+            encoder_type = SubtitleEncoder
+        else:
+            raise ValueError("Not a valid encoder type")
 
         for encoder in encoder_type.__subclasses__():
             if encoder.preset_tag == self.encoder_preset:

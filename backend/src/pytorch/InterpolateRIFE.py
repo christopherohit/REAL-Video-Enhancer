@@ -106,8 +106,6 @@ class InterpolateRifeTorch(BaseInterpolate):
         state_dict = torch.load(
             self.interpolateModel,
             map_location=self.device,
-            weights_only=True,
-            mmap=True,
         )
         # detect what rife arch to use
 
@@ -117,52 +115,51 @@ class InterpolateRifeTorch(BaseInterpolate):
         num_ch_for_encode = 0
         self.encode = None
 
-        match interpolateArch.lower():
-            case "rife46":
-                from .InterpolateArchs.RIFE.rife46IFNET import IFNet
-            case "rife47":
-                from .InterpolateArchs.RIFE.rife47IFNET import IFNet
+        interpolate_arch_lower = interpolateArch.lower()
+        if interpolate_arch_lower == "rife46":
+            from .InterpolateArchs.RIFE.rife46IFNET import IFNet
+        elif interpolate_arch_lower == "rife47":
+            from .InterpolateArchs.RIFE.rife47IFNET import IFNet
 
-                num_ch_for_encode = 4
-                self.encode = torch.nn.Sequential(
-                    torch.nn.Conv2d(3, 16, 3, 2, 1),
-                    torch.nn.ConvTranspose2d(16, 4, 4, 2, 1),
-                ).float()
-            case "rife413":
-                from .InterpolateArchs.RIFE.rife413IFNET import IFNet, Head
+            num_ch_for_encode = 4
+            self.encode = torch.nn.Sequential(
+                torch.nn.Conv2d(3, 16, 3, 2, 1),
+                torch.nn.ConvTranspose2d(16, 4, 4, 2, 1),
+            ).float()
+        elif interpolate_arch_lower == "rife413":
+            from .InterpolateArchs.RIFE.rife413IFNET import IFNet, Head
 
-                num_ch_for_encode = 8
-                self.encode = Head()
-            case "rife420":
-                from .InterpolateArchs.RIFE.rife420IFNET import IFNet, Head
+            num_ch_for_encode = 8
+            self.encode = Head()
+        elif interpolate_arch_lower == "rife420":
+            from .InterpolateArchs.RIFE.rife420IFNET import IFNet, Head
 
-                num_ch_for_encode = 8
-                self.encode = Head()
-            case "rife421":
-                from .InterpolateArchs.RIFE.rife421IFNET import IFNet, Head
+            num_ch_for_encode = 8
+            self.encode = Head()
+        elif interpolate_arch_lower == "rife421":
+            from .InterpolateArchs.RIFE.rife421IFNET import IFNet, Head
 
-                num_ch_for_encode = 8
-                self.encode = Head()
-            case "rife422lite":
-                from .InterpolateArchs.RIFE.rife422_liteIFNET import IFNet, Head
+            num_ch_for_encode = 8
+            self.encode = Head()
+        elif interpolate_arch_lower == "rife422lite":
+            from .InterpolateArchs.RIFE.rife422_liteIFNET import IFNet, Head
 
-                self.encode = Head()
-                num_ch_for_encode = 4
-            case "rife425":
-                from .InterpolateArchs.RIFE.rife425IFNET import IFNet, Head
+            self.encode = Head()
+            num_ch_for_encode = 4
+        elif interpolate_arch_lower == "rife425":
+            from .InterpolateArchs.RIFE.rife425IFNET import IFNet, Head
 
-                _pad = 64
-                num_ch_for_encode = 4
-                self.encode = Head()
-            case "rife425_heavy":
-                from .InterpolateArchs.RIFE.rife425_heavyIFNET import IFNet, Head
-                _pad = 64
-                num_ch_for_encode = 16
-                self.encode = Head()
-
-            case _:
-                errorAndLog("Invalid Interpolation Arch")
-                exit()
+            _pad = 64
+            num_ch_for_encode = 4
+            self.encode = Head()
+        elif interpolate_arch_lower == "rife425_heavy":
+            from .InterpolateArchs.RIFE.rife425_heavyIFNET import IFNet, Head
+            _pad = 64
+            num_ch_for_encode = 16
+            self.encode = Head()
+        else:
+            errorAndLog("Invalid Interpolation Arch")
+            exit()
 
         # model unspecific setup
         if self.dynamicScaledOpticalFlow:

@@ -17,12 +17,11 @@ class InterpolateFactory:
     def build_interpolation_method(interpolate_model_path, backend, drba=False):
         ad = ArchDetect(interpolate_model_path)
         base_arch = ad.getArchBase()
-        match base_arch:
-            case "rife":
-                if drba:
-                    return InterpolateRIFEDRBA
-                return InterpolateRifeTorch
-            case "gmfss":
-                return InterpolateGMFSSTorch
-            case "ifrnet":
-                return InterpolateIFRNetTorch  # IFRNet is a RIFE based architecture
+        if base_arch == "rife":
+            if drba:
+                return InterpolateRIFEDRBA
+            return InterpolateRifeTorch
+        elif base_arch == "gmfss":
+            return InterpolateGMFSSTorch
+        elif base_arch == "ifrnet":
+            return InterpolateIFRNetTorch  # IFRNet is a RIFE based architecture

@@ -9,13 +9,12 @@ def download_ffmpeg():
     if not os.path.isfile(installed_path):
         from .FileHandler import FileHandler
         link = "https://github.com/TNTwise/real-video-enhancer-models/releases/download/models/"
-        match PLATFORM:
-            case "linux":
-                link += "ffmpeg" if CPU_ARCH == "x86_64" else "ffmpeg-linux-arm64"
-            case "win32":
-                link += "ffmpeg.exe" if CPU_ARCH == "x86_64" else "ffmpeg-windows-arm64.exe"
-            case "darwin":
-                link += "ffmpeg-macos-bin" if CPU_ARCH == "x86_64" else "ffmpeg-macos-arm"
+        if PLATFORM == "linux":
+            link += "ffmpeg" if CPU_ARCH == "x86_64" else "ffmpeg-linux-arm64"
+        elif PLATFORM == "win32":
+            link += "ffmpeg.exe" if CPU_ARCH == "x86_64" else "ffmpeg-windows-arm64.exe"
+        elif PLATFORM == "darwin":
+            link += "ffmpeg-macos-bin" if CPU_ARCH == "x86_64" else "ffmpeg-macos-arm"
         
         try:
             import requests

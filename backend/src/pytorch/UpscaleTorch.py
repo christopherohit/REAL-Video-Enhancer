@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import os
 import math
-
 import gc
 from .TorchUtils import TorchUtils
 from .UpscaleModelWrapper import UpscaleModelWrapper
@@ -142,13 +143,12 @@ class UpscalePytorch:
             )
             self.scale = self.upscale_model_wrapper.get_scale()
             
-            match self.scale:
-                case 1:
-                    modulo = 4
-                case 2:
-                    modulo = 2
-                case _:
-                    modulo = 1
+            if self.scale == 1:
+                modulo = 4
+            elif self.scale == 2:
+                modulo = 2
+            else:
+                modulo = 1
             if all(t > 0 for t in self.tile):
                 self.pad_w = (
                     math.ceil(

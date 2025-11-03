@@ -77,9 +77,10 @@ class BackendDetect:
             if self.pytorch_device.lower() == "mps": return [{"index": 0, "name": "Apple MPS"}]
             torch_cmd_dict = {
             "cuda": self.__torch.cuda,
-            "xpu": self.__torch.xpu,
-            "rocm": self.__torch.cuda,  
+            "rocm": self.__torch.cuda,
             }
+            if hasattr(self.__torch, 'xpu'):
+                torch_cmd_dict["xpu"] = self.__torch.xpu
 
             torch_cmd = torch_cmd_dict[self.pytorch_device]
             if torch_cmd.is_available():

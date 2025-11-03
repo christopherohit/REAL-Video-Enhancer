@@ -293,7 +293,7 @@ class ArchDetect:
             self.state_dict = pkl_path
         else:
             self.state_dict = torch.load(
-                pkl_path, weights_only=True, map_location=torch.device("cpu")
+                pkl_path, map_location=torch.device("cpu")
             )
         # this is specific to loading gmfss, as its loaded in as one big pkl
         if "flownet" in self.state_dict:

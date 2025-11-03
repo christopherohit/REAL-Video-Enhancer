@@ -35,5 +35,10 @@ FFMPEG_PATH = (
     if PLATFORM == "win32"
     else os.path.join(CWD, "bin", "ffmpeg")
 )
+# Check if local ffmpeg exists, otherwise use system ffmpeg
+if not os.path.exists(FFMPEG_PATH):
+    import shutil
+    FFMPEG_PATH = shutil.which("ffmpeg") or "ffmpeg"
+
 FFMPEG_LOG_FILE = os.path.join(CWD, "ffmpeg_log.txt")
 MODELS_DIRECTORY = os.path.join(CWD, "models")
